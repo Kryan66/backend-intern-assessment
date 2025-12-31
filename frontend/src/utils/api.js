@@ -25,7 +25,7 @@ export async function apiCall(endpoint, options = {}) {
   return data;
 }
 
-// Auth
+/* ================= AUTH ================= */
 export const authAPI = {
   login: (email, password) =>
     apiCall("/auth/login", {
@@ -45,7 +45,7 @@ export const authAPI = {
     }),
 };
 
-// User
+/* ================= USER ================= */
 export const userAPI = {
   getMe: () => apiCall("/user/me"),
 
@@ -55,7 +55,8 @@ export const userAPI = {
       body: JSON.stringify({ fullName, email }),
     }),
 };
-// Posts API
+
+/* ================= POSTS ================= */
 export const postsAPI = {
   getAll: () => apiCall("/posts"),
 
@@ -74,5 +75,21 @@ export const postsAPI = {
   delete: (id) =>
     apiCall(`/posts/${id}`, {
       method: "DELETE",
+    }),
+};
+
+/* ================= ADMIN ================= */
+export const adminAPI = {
+  getUsers: (page = 1) =>
+    apiCall(`/admin/users?page=${page}`),
+
+  activateUser: (id) =>
+    apiCall(`/admin/users/${id}/activate`, {
+      method: "PATCH",
+    }),
+
+  deactivateUser: (id) =>
+    apiCall(`/admin/users/${id}/deactivate`, {
+      method: "PATCH",
     }),
 };
