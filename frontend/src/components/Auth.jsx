@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { Loading } from './Loading';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
+import { Loading } from "./Loading";
 
 export function Auth() {
-  const [activeTab, setActiveTab] = useState('login');
-  const [loading, setLoading] = useState(false);
-  const { login, signup } = useAuth();
   const navigate = useNavigate();
+  const { login, signup } = useAuth();
   const { showToast } = useToast();
 
+  const [activeTab, setActiveTab] = useState("login");
+  const [loading, setLoading] = useState(false);
+
   const [loginForm, setLoginForm] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [signupForm, setSignupForm] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleLogin = async (e) => {
@@ -29,10 +30,10 @@ export function Auth() {
 
     try {
       await login(loginForm.email, loginForm.password);
-      showToast('Logged in successfully!', 'success');
-      navigate('/posts');
+      showToast("Logged in successfully", "success");
+      navigate("/posts");
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(err.message || "Login failed", "error");
     } finally {
       setLoading(false);
     }
@@ -42,7 +43,7 @@ export function Auth() {
     e.preventDefault();
 
     if (signupForm.password !== signupForm.confirmPassword) {
-      showToast('Passwords do not match', 'error');
+      showToast("Passwords do not match", "error");
       return;
     }
 
@@ -54,10 +55,10 @@ export function Auth() {
         signupForm.email,
         signupForm.password
       );
-      showToast('Account created successfully!', 'success');
-      navigate('/posts');
+      showToast("Account created successfully", "success");
+      navigate("/posts");
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(err.message || "Signup failed", "error");
     } finally {
       setLoading(false);
     }
@@ -65,87 +66,103 @@ export function Auth() {
 
   return (
     <div className="auth-container">
-      <div className="auth-tabs">
-        <button onClick={() => setActiveTab('login')}>Login</button>
-        <button onClick={() => setActiveTab('signup')}>Signup</button>
+      <div className="auth-card">
+        <div className="auth-tabs">
+          <button
+            className={activeTab === "login" ? "active" : ""}
+            onClick={() => setActiveTab("login")}
+          >
+            Login
+          </button>
+          <button
+            className={activeTab === "signup" ? "active" : ""}
+            onClick={() => setActiveTab("signup")}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {loading && <Loading />}
+
+        {activeTab === "login" && (
+          <form onSubmit={handleLogin}>
+            <h2>Welcome Back</h2>
+
+            <input
+              type="email"
+              placeholder="Email"
+              value={loginForm.email}
+              onChange={(e) =>
+                setLoginForm({ ...loginForm, email: e.target.value })
+              }
+              required
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={loginForm.password}
+              onChange={(e) =>
+                setLoginForm({ ...loginForm, password: e.target.value })
+              }
+              required
+            />
+
+            <button type="submit">Login</button>
+          </form>
+        )}
+
+        {activeTab === "signup" && (
+          <form onSubmit={handleSignup}>
+            <h2>Create Account</h2>
+
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={signupForm.fullName}
+              onChange={(e) =>
+                setSignupForm({ ...signupForm, fullName: e.target.value })
+              }
+              required
+            />
+
+            <input
+              type="email"
+              placeholder="Email"
+              value={signupForm.email}
+              onChange={(e) =>
+                setSignupForm({ ...signupForm, email: e.target.value })
+              }
+              required
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={signupForm.password}
+              onChange={(e) =>
+                setSignupForm({ ...signupForm, password: e.target.value })
+              }
+              required
+            />
+
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={signupForm.confirmPassword}
+              onChange={(e) =>
+                setSignupForm({
+                  ...signupForm,
+                  confirmPassword: e.target.value,
+                })
+              }
+              required
+            />
+
+            <button type="submit">Sign Up</button>
+          </form>
+        )}
       </div>
-
-      {loading && <Loading />}
-
-      {activeTab === 'login' && (
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={loginForm.email}
-            onChange={(e) =>
-              setLoginForm({ ...loginForm, email: e.target.value })
-            }
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={loginForm.password}
-            onChange={(e) =>
-              setLoginForm({ ...loginForm, password: e.target.value })
-            }
-            required
-          />
-
-          <button type="submit">Login</button>
-        </form>
-      )}
-
-      {activeTab === 'signup' && (
-        <form onSubmit={handleSignup}>
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={signupForm.fullName}
-            onChange={(e) =>
-              setSignupForm({ ...signupForm, fullName: e.target.value })
-            }
-            required
-          />
-
-          <input
-            type="email"
-            placeholder="Email"
-            value={signupForm.email}
-            onChange={(e) =>
-              setSignupForm({ ...signupForm, email: e.target.value })
-            }
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={signupForm.password}
-            onChange={(e) =>
-              setSignupForm({ ...signupForm, password: e.target.value })
-            }
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={signupForm.confirmPassword}
-            onChange={(e) =>
-              setSignupForm({
-                ...signupForm,
-                confirmPassword: e.target.value,
-              })
-            }
-            required
-          />
-
-          <button type="submit">Sign Up</button>
-        </form>
-      )}
     </div>
   );
 }
