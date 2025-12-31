@@ -16,14 +16,32 @@ export async function apiCall(endpoint, options = {}) {
   }
 
   const url = endpoint.startsWith('/') ? `${API_BASE}${endpoint}` : `${API_BASE}/${endpoint}`;
-  const response = await fetch(url, config);
-  const data = await response.json();
+  
+  try {
+    const response = await fetch(url, config);
+    
+    // Handle non-JSON responses
+    let data;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      throw new Error(text || `HTTP ${response.status}: ${response.statusText}`);
+    }
 
-  if (!response.ok) {
-    throw new Error(data.message || "Something went wrong");
+    if (!response.ok) {
+      throw new Error(data.message || data.error || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return data;
+  } catch (error) {
+    // Handle network errors
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network error: Unable to connect to server. Please check your connection.');
+    }
+    throw error;
   }
-
-  return data;
 }
 
 /* ================= AUTH ================= */

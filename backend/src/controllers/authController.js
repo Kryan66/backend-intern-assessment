@@ -40,6 +40,7 @@ exports.signup = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (error) {
@@ -56,11 +57,18 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    if (!user.isActive)
       return res.status(403).json({ message: "Account is deactivated" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
 
     const token = jwt.sign(
       { id: user._id },
@@ -75,6 +83,7 @@ exports.login = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (error) {

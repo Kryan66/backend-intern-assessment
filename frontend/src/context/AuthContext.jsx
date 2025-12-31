@@ -22,10 +22,12 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
     } catch (error) {
       console.error('Failed to load user:', error);
-      // Clear token if user load fails
-      localStorage.removeItem('token');
-      setToken(null);
-      setUser(null);
+      // Only clear token if it's an auth error (401/403), not network errors
+      if (error.message.includes('401') || error.message.includes('403') || error.message.includes('unauthorized')) {
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }

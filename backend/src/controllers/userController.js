@@ -33,17 +33,21 @@ exports.updateProfile = async (req, res) => {
 // CHANGE PASSWORD
 exports.changePassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-    if (!oldPassword || !newPassword) {
+    if (!currentPassword || !newPassword) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
     const user = await User.findById(req.user._id);
 
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Old password is incorrect" });
+      return res.status(400).json({ message: "Current password is incorrect" });
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
