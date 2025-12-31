@@ -55,3 +55,24 @@ export const userAPI = {
       body: JSON.stringify({ fullName, email }),
     }),
 };
+// Posts API
+export const postsAPI = {
+  getAll: () => apiCall("/posts"),
+
+  create: (title, description) =>
+    apiCall("/posts", {
+      method: "POST",
+      body: JSON.stringify({ title, description }),
+    }),
+
+  update: (id, title, description) =>
+    apiCall(`/posts/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ title, description }),
+    }),
+
+  delete: (id) =>
+    apiCall(`/posts/${id}`, {
+      method: "DELETE",
+    }),
+};
