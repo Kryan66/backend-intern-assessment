@@ -1,4 +1,3 @@
-// API Configuration
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 export async function apiCall(endpoint, options = {}) {
@@ -26,7 +25,7 @@ export async function apiCall(endpoint, options = {}) {
   return data;
 }
 
-// ================= AUTH API =================
+// Auth
 export const authAPI = {
   login: (email, password) =>
     apiCall("/auth/login", {
@@ -46,7 +45,7 @@ export const authAPI = {
     }),
 };
 
-// ================= USER API =================
+// User
 export const userAPI = {
   getMe: () => apiCall("/user/me"),
 
