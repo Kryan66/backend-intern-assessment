@@ -26,10 +26,23 @@ export function Auth() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(loginForm.email)) {
+      showToast("Please enter a valid email address", "error");
+      return;
+    }
+
+    if (!loginForm.password) {
+      showToast("Password is required", "error");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await login(loginForm.email, loginForm.password);
+      await login(loginForm.email.trim(), loginForm.password);
       showToast("Logged in successfully", "success");
       navigate("/posts");
     } catch (err) {
@@ -42,6 +55,26 @@ export function Auth() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
+    // Validate full name
+    if (!signupForm.fullName || signupForm.fullName.trim().length < 3) {
+      showToast("Full name must be at least 3 characters", "error");
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(signupForm.email)) {
+      showToast("Please enter a valid email address", "error");
+      return;
+    }
+
+    // Validate password
+    if (!signupForm.password || signupForm.password.length < 6) {
+      showToast("Password must be at least 6 characters", "error");
+      return;
+    }
+
+    // Validate password confirmation
     if (signupForm.password !== signupForm.confirmPassword) {
       showToast("Passwords do not match", "error");
       return;
@@ -51,8 +84,8 @@ export function Auth() {
 
     try {
       await signup(
-        signupForm.fullName,
-        signupForm.email,
+        signupForm.fullName.trim(),
+        signupForm.email.trim(),
         signupForm.password
       );
       showToast("Account created successfully", "success");
@@ -85,7 +118,7 @@ export function Auth() {
         {loading && <Loading />}
 
         {activeTab === "login" && (
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} noValidate>
             <h2>Welcome Back</h2>
 
             <input
@@ -95,7 +128,6 @@ export function Auth() {
               onChange={(e) =>
                 setLoginForm({ ...loginForm, email: e.target.value })
               }
-              required
             />
 
             <input
@@ -105,7 +137,6 @@ export function Auth() {
               onChange={(e) =>
                 setLoginForm({ ...loginForm, password: e.target.value })
               }
-              required
             />
 
             <button type="submit">Login</button>
@@ -113,17 +144,16 @@ export function Auth() {
         )}
 
         {activeTab === "signup" && (
-          <form onSubmit={handleSignup}>
+          <form onSubmit={handleSignup} noValidate>
             <h2>Create Account</h2>
 
             <input
               type="text"
-              placeholder="Full Name"
+              placeholder="Full Name (min 3 characters)"
               value={signupForm.fullName}
               onChange={(e) =>
                 setSignupForm({ ...signupForm, fullName: e.target.value })
               }
-              required
             />
 
             <input
@@ -133,17 +163,15 @@ export function Auth() {
               onChange={(e) =>
                 setSignupForm({ ...signupForm, email: e.target.value })
               }
-              required
             />
 
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Password (min 6 characters)"
               value={signupForm.password}
               onChange={(e) =>
                 setSignupForm({ ...signupForm, password: e.target.value })
               }
-              required
             />
 
             <input
@@ -156,7 +184,6 @@ export function Auth() {
                   confirmPassword: e.target.value,
                 })
               }
-              required
             />
 
             <button type="submit">Sign Up</button>
