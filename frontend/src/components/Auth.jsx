@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { Loading } from "./Loading";
 
-const Auth = () => {
+export default function Auth() {
   const [activeTab, setActiveTab] = useState("login");
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +67,7 @@ const Auth = () => {
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <div className="tabs">
+        <div className="auth-tabs">
           <button
             className={activeTab === "login" ? "active" : ""}
             onClick={() => setActiveTab("login")}
@@ -82,13 +82,15 @@ const Auth = () => {
           </button>
         </div>
 
+        {loading && <Loading />}
+
         {activeTab === "login" && (
           <form onSubmit={handleLogin}>
             <input
               type="email"
               placeholder="Email"
-              required
               value={loginForm.email}
+              required
               onChange={(e) =>
                 setLoginForm({ ...loginForm, email: e.target.value })
               }
@@ -97,16 +99,14 @@ const Auth = () => {
             <input
               type="password"
               placeholder="Password"
-              required
               value={loginForm.password}
+              required
               onChange={(e) =>
                 setLoginForm({ ...loginForm, password: e.target.value })
               }
             />
 
-            <button type="submit" disabled={loading}>
-              {loading ? <Loading /> : "Login"}
-            </button>
+            <button type="submit">Login</button>
           </form>
         )}
 
@@ -115,8 +115,8 @@ const Auth = () => {
             <input
               type="text"
               placeholder="Full Name"
-              required
               value={signupForm.fullName}
+              required
               onChange={(e) =>
                 setSignupForm({ ...signupForm, fullName: e.target.value })
               }
@@ -125,8 +125,8 @@ const Auth = () => {
             <input
               type="email"
               placeholder="Email"
-              required
               value={signupForm.email}
+              required
               onChange={(e) =>
                 setSignupForm({ ...signupForm, email: e.target.value })
               }
@@ -135,8 +135,8 @@ const Auth = () => {
             <input
               type="password"
               placeholder="Password"
-              required
               value={signupForm.password}
+              required
               onChange={(e) =>
                 setSignupForm({ ...signupForm, password: e.target.value })
               }
@@ -145,8 +145,8 @@ const Auth = () => {
             <input
               type="password"
               placeholder="Confirm Password"
-              required
               value={signupForm.confirmPassword}
+              required
               onChange={(e) =>
                 setSignupForm({
                   ...signupForm,
@@ -155,14 +155,10 @@ const Auth = () => {
               }
             />
 
-            <button type="submit" disabled={loading}>
-              {loading ? <Loading /> : "Create Account"}
-            </button>
+            <button type="submit">Create Account</button>
           </form>
         )}
       </div>
     </div>
   );
-};
-
-export default Auth;
+}
