@@ -23,3 +23,6 @@ yarn-error.log*
 
 # Vite
 .vite
+
+# NPM Cache
+.npm-cache
