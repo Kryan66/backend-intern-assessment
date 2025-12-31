@@ -58,3 +58,4 @@ frontend/
 - Protected Routes
 - Toast Notifications
 - Responsive Design
+

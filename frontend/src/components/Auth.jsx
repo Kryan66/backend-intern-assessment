@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { Loading } from "./Loading";
 
-export function Auth() {
+export const Auth = () => {
   const navigate = useNavigate();
   const { login, signup } = useAuth();
   const { showToast } = useToast();
@@ -118,78 +118,104 @@ export function Auth() {
         {loading && <Loading />}
 
         {activeTab === "login" && (
-          <form onSubmit={handleLogin} noValidate>
+          <div className="auth-form active">
             <h2>Welcome Back</h2>
-
-            <input
-              type="email"
-              placeholder="Email"
-              value={loginForm.email}
-              onChange={(e) =>
-                setLoginForm({ ...loginForm, email: e.target.value })
-              }
-            />
-
-            <input
-              type="password"
-              placeholder="Password"
-              value={loginForm.password}
-              onChange={(e) =>
-                setLoginForm({ ...loginForm, password: e.target.value })
-              }
-            />
-
-            <button type="submit">Login</button>
-          </form>
+            <p className="auth-subtitle">Login to your account</p>
+            <form onSubmit={handleLogin} noValidate>
+              <div className="form-group">
+                <label htmlFor="login-email">Email</label>
+                <input
+                  type="email"
+                  id="login-email"
+                  placeholder="your@email.com"
+                  value={loginForm.email}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, email: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="login-password">Password</label>
+                <input
+                  type="password"
+                  id="login-password"
+                  placeholder="••••••••"
+                  value={loginForm.password}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, password: e.target.value })
+                  }
+                />
+              </div>
+              <button type="submit" className="btn btn-primary btn-block">
+                Login
+              </button>
+            </form>
+          </div>
         )}
 
         {activeTab === "signup" && (
-          <form onSubmit={handleSignup} noValidate>
+          <div className="auth-form active">
             <h2>Create Account</h2>
-
-            <input
-              type="text"
-              placeholder="Full Name (min 3 characters)"
-              value={signupForm.fullName}
-              onChange={(e) =>
-                setSignupForm({ ...signupForm, fullName: e.target.value })
-              }
-            />
-
-            <input
-              type="email"
-              placeholder="Email"
-              value={signupForm.email}
-              onChange={(e) =>
-                setSignupForm({ ...signupForm, email: e.target.value })
-              }
-            />
-
-            <input
-              type="password"
-              placeholder="Password (min 6 characters)"
-              value={signupForm.password}
-              onChange={(e) =>
-                setSignupForm({ ...signupForm, password: e.target.value })
-              }
-            />
-
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={signupForm.confirmPassword}
-              onChange={(e) =>
-                setSignupForm({
-                  ...signupForm,
-                  confirmPassword: e.target.value,
-                })
-              }
-            />
-
-            <button type="submit">Sign Up</button>
-          </form>
+            <p className="auth-subtitle">Join our community today</p>
+            <form onSubmit={handleSignup} noValidate>
+              <div className="form-group">
+                <label htmlFor="signup-name">Full Name</label>
+                <input
+                  type="text"
+                  id="signup-name"
+                  placeholder="John Doe"
+                  value={signupForm.fullName}
+                  onChange={(e) =>
+                    setSignupForm({ ...signupForm, fullName: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="signup-email">Email</label>
+                <input
+                  type="email"
+                  id="signup-email"
+                  placeholder="your@email.com"
+                  value={signupForm.email}
+                  onChange={(e) =>
+                    setSignupForm({ ...signupForm, email: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="signup-password">Password</label>
+                <input
+                  type="password"
+                  id="signup-password"
+                  placeholder="•••••••• (min 6 characters)"
+                  value={signupForm.password}
+                  onChange={(e) =>
+                    setSignupForm({ ...signupForm, password: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="confirm-password">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  placeholder="••••••••"
+                  value={signupForm.confirmPassword}
+                  onChange={(e) =>
+                    setSignupForm({
+                      ...signupForm,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <button type="submit" className="btn btn-primary btn-block">
+                Sign Up
+              </button>
+            </form>
+          </div>
         )}
       </div>
     </div>
   );
-}
+};

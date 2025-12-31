@@ -47,3 +47,4 @@ Make sure:
 - Backend is running on port 4000
 - Backend CORS is configured correctly
 - No firewall blocking the connection
+

@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const API_BASE = (import.meta.env.VITE_API_URL || "http://127.0.0.1:4000/api").replace(/\/$/, '');
 
 export async function apiCall(endpoint, options = {}) {
   const token = localStorage.getItem("token");
@@ -15,7 +15,8 @@ export async function apiCall(endpoint, options = {}) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, config);
+  const url = endpoint.startsWith('/') ? `${API_BASE}${endpoint}` : `${API_BASE}/${endpoint}`;
+  const response = await fetch(url, config);
   const data = await response.json();
 
   if (!response.ok) {
@@ -54,25 +55,33 @@ export const userAPI = {
       method: "PATCH",
       body: JSON.stringify({ fullName, email }),
     }),
+
+  changePassword: (currentPassword, newPassword) =>
+    apiCall("/user/password", {
+      method: "PATCH",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    }),
 };
 
 /* ================= POSTS ================= */
 export const postsAPI = {
-  getAll: () => apiCall("/posts"),
+  getPosts: () => apiCall("/posts"),
 
-  create: (title, description) =>
+  getPostById: (id) => apiCall(`/posts/${id}`),
+
+  createPost: (title, description) =>
     apiCall("/posts", {
       method: "POST",
       body: JSON.stringify({ title, description }),
     }),
 
-  update: (id, title, description) =>
+  updatePost: (id, title, description) =>
     apiCall(`/posts/${id}`, {
       method: "PUT",
       body: JSON.stringify({ title, description }),
     }),
 
-  delete: (id) =>
+  deletePost: (id) =>
     apiCall(`/posts/${id}`, {
       method: "DELETE",
     }),
