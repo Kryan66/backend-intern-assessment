@@ -26,7 +26,7 @@ export async function apiCall(endpoint, options = {}) {
   return data;
 }
 
-// Auth API
+// ================= AUTH API =================
 export const authAPI = {
   login: (email, password) =>
     apiCall("/auth/login", {
@@ -42,10 +42,11 @@ export const authAPI = {
 
   logout: () =>
     apiCall("/auth/logout", {
-      method: "POST"),
+      method: "POST",
+    }),
 };
 
-// User API
+// ================= USER API =================
 export const userAPI = {
   getMe: () => apiCall("/user/me"),
 
@@ -53,11 +54,5 @@ export const userAPI = {
     apiCall("/user/profile", {
       method: "PATCH",
       body: JSON.stringify({ fullName, email }),
-    }),
-
-  changePassword: (oldPassword, newPassword) =>
-    apiCall("/user/password", {
-      method: "PATCH",
-      body: JSON.stringify({ oldPassword, newPassword }),
     }),
 };
