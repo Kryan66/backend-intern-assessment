@@ -26,10 +26,18 @@ export const Auth = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    // Trim and validate email
+    const email = loginForm.email.trim();
+    if (!email) {
+      showToast("Email is required", "error");
+      return;
+    }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(loginForm.email)) {
+    if (!emailRegex.test(email)) {
       showToast("Please enter a valid email address", "error");
       return;
     }
@@ -42,7 +50,7 @@ export const Auth = () => {
     setLoading(true);
 
     try {
-      await login(loginForm.email.trim(), loginForm.password);
+      await login(email, loginForm.password);
       showToast("Logged in successfully", "success");
       navigate("/posts");
     } catch (err) {
@@ -125,13 +133,14 @@ export const Auth = () => {
               <div className="form-group">
                 <label htmlFor="login-email">Email</label>
                 <input
-                  type="email"
+                  type="text"
                   id="login-email"
                   placeholder="your@email.com"
                   value={loginForm.email}
                   onChange={(e) =>
                     setLoginForm({ ...loginForm, email: e.target.value })
                   }
+                  autoComplete="email"
                 />
               </div>
               <div className="form-group">
@@ -144,6 +153,7 @@ export const Auth = () => {
                   onChange={(e) =>
                     setLoginForm({ ...loginForm, password: e.target.value })
                   }
+                  autoComplete="current-password"
                 />
               </div>
               <button type="submit" className="btn btn-primary btn-block">
@@ -168,18 +178,20 @@ export const Auth = () => {
                   onChange={(e) =>
                     setSignupForm({ ...signupForm, fullName: e.target.value })
                   }
+                  autoComplete="name"
                 />
               </div>
               <div className="form-group">
                 <label htmlFor="signup-email">Email</label>
                 <input
-                  type="email"
+                  type="text"
                   id="signup-email"
                   placeholder="your@email.com"
                   value={signupForm.email}
                   onChange={(e) =>
                     setSignupForm({ ...signupForm, email: e.target.value })
                   }
+                  autoComplete="email"
                 />
               </div>
               <div className="form-group">
@@ -192,6 +204,7 @@ export const Auth = () => {
                   onChange={(e) =>
                     setSignupForm({ ...signupForm, password: e.target.value })
                   }
+                  autoComplete="new-password"
                 />
               </div>
               <div className="form-group">
@@ -207,6 +220,7 @@ export const Auth = () => {
                       confirmPassword: e.target.value,
                     })
                   }
+                  autoComplete="new-password"
                 />
               </div>
               <button type="submit" className="btn btn-primary btn-block">
